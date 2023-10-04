@@ -40,6 +40,7 @@
     <link rel="stylesheet" href="{{asset('user/style.css')}}">
     <!-- Responsive CSS -->
     <link rel="stylesheet" href="{{asset('user/css/responsive.css')}}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
     <!-- Modernizr js -->
     <script src="{{asset('user/js/vendor/modernizr-2.8.3.min.js')}}"></script>
 </head>
@@ -213,7 +214,25 @@
                                 <li class="hm-minicart">
                                     <div class="hm-minicart-trigger">
                                         <span class="item-icon"></span>
-                                        <span class="item-text">Cart</span>
+                                        <span class="item-text">Cart
+                                            @php
+                                                // Get the cart data from the session
+                                                $cart = session('cart');
+
+                                                // Initialize the total quantity
+                                                $totalQuantity = 0;
+
+                                                // Check if $cart is an array or Countable
+                                                if (is_array($cart) || $cart instanceof Countable) {
+                                                    // Calculate the total quantity
+                                                    foreach ($cart as $cartItem) {
+                                                        $totalQuantity += $cartItem['quantity'];
+                                                    }
+                                                }
+
+                                            @endphp
+                                        <span class="cart-item-count">{{ $totalQuantity }}</span>
+                                        </span>
                                     </div>
                                     <span></span>
                                     <div class="minicart">
@@ -1340,6 +1359,8 @@
 <script src="{{asset('user/js/slick.min.js')}}"></script>
 <!-- Owl Carousel-2 js -->
 <script src="{{asset('user/js/owl.carousel.min.js')}}"></script>
+<script src="src/jquery.table2excel.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <!-- Magnific popup js -->
 <script src="{{asset('user/js/jquery.magnific-popup.min.js')}}"></script>
 <!-- Isotope js -->
@@ -1367,6 +1388,25 @@
 <!-- Main/Activator js -->
 <script src="{{asset('user/js/main.js')}}"></script>
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: '{{ session('success') }}',
+        });
+        @endif
+
+        @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi!',
+            text: '{{ session('error') }}',
+        });
+        @endif
+    });
+</script>
 
 <!-- index-431:47-->
 </html>

@@ -368,7 +368,24 @@
                                 <li class="hm-minicart">
                                     <div class="hm-minicart-trigger">
                                         <span class="item-icon"></span>
-                                        <span class="item-text">Cart</span>
+                                        <span class="item-text">Cart
+                                        @php
+                                            // Get the cart data from the session
+                                            $cart = session('cart');
+
+                                            // Initialize the total quantity
+                                            $totalQuantity = 0;
+
+                                            // Check if $cart is an array or Countable
+                                            if (is_array($cart) || $cart instanceof Countable) {
+                                                // Calculate the total quantity
+                                                foreach ($cart as $cartItem) {
+                                                    $totalQuantity += $cartItem['quantity'];
+                                                }
+                                            }
+
+                                        @endphp
+                                        <span class="cart-item-count">{{ $totalQuantity }}</span></span>
                                     </div>
                                     <div class="minicart">
                                         <div class="minicart-button">

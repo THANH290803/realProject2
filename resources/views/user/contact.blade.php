@@ -78,8 +78,14 @@
                                     <div class="ht-setting-trigger"><span>Setting</span></div>
                                     <div class="setting ht-setting">
                                         <ul class="ht-setting-list">
-                                            <li><a href="login-register.html">My Account</a></li>
-                                            <li><a href="{{asset('user/loginRegister')}}">Sign In</a></li>
+                                            @if(Auth::check() || Auth::guard('customer')->check())
+                                                <!-- Hiển thị liên kết "My Account" khi đã đăng nhập -->
+                                                <li><a href="{{ asset('user/my-account') }}">My Account</a></li>
+                                                <li><a href="{{ route('user.logout') }}">Log Out</a></li>
+                                            @else
+                                                <!-- Hiển thị liên kết "Sign In" nếu chưa đăng nhập -->
+                                                <li><a href="{{ route('user.loginRegister') }}">Sign In</a></li>
+                                            @endif
                                         </ul>
                                     </div>
                                 </li>
@@ -142,7 +148,24 @@
                                 <li class="hm-minicart">
                                     <div class="hm-minicart-trigger">
                                         <span class="item-icon"></span>
-                                        <span class="item-text">Cart</span>
+                                        <span class="item-text">Cart
+                                        @php
+                                            // Get the cart data from the session
+                                            $cart = session('cart');
+
+                                            // Initialize the total quantity
+                                            $totalQuantity = 0;
+
+                                            // Check if $cart is an array or Countable
+                                            if (is_array($cart) || $cart instanceof Countable) {
+                                                // Calculate the total quantity
+                                                foreach ($cart as $cartItem) {
+                                                    $totalQuantity += $cartItem['quantity'];
+                                                }
+                                            }
+
+                                        @endphp
+                                        <span class="cart-item-count">{{ $totalQuantity }}</span></span>
                                     </div>
                                     <span></span>
                                     <div class="minicart">
@@ -173,11 +196,9 @@
                             <nav>
                                 <ul>
                                     <li class="dropdown-holder"><a href="{{asset('user/index')}}">Home</a></li>
-                                    <li class="megamenu-holder"><a href="{{asset('user/laptop')}}">Laptop</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{asset('user/access')}}">Accessories</a>
-                                    </li>
+                                    @foreach($categories as $categoryItem)
+                                        <li class="megamenu-holder"><a href="{{ route('user.laptop', ['category' => $categoryItem->name]) }}">{{ $categoryItem->name }}</a></li>
+                                    @endforeach
                                     <li class="dropdown-holder" style="display: inline-block; position: relative; padding-right: 40px; transition: all 0.3s ease-in-out;"><a href="{{asset('user/blog')}}">Blog</a>
                                     </li>
                                     <li style="padding-right: 25px;"><a href="{{asset('user/about')}}">About Us</a></li>

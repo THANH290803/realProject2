@@ -156,15 +156,11 @@ Route::get('/order/complete/{order_id}', [\App\Http\Controllers\CustomerControll
 Route::get('/order/cancel/{order_id}', [\App\Http\Controllers\CustomerController::class, 'cancel'])
     ->name('order.cancel');
 
-Route::get('user/blog', function () {
-    return view('user.blog');
-});
+Route::get('user/blog', [\App\Http\Controllers\IndexController::class, 'genaral'])->name('user.blog');
 
-Route::get('user/about', function () {
-    return view('user.about');
-});
+Route::get('user/about', [\App\Http\Controllers\IndexController::class, 'about'])->name('user.about');
 
-Route::get('user/contact', function () {
-    return view('user.contact');
+Route::get('user/contact', [\App\Http\Controllers\IndexController::class, 'contact'])->name('user.contact');
+Route::get('admin/posbanhang', function () {
+    return view('admin.pos');
 });
-

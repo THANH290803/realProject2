@@ -185,13 +185,18 @@ class IndexController extends Controller
         return view('user.productDetail', compact('products', 'configuration', 'categories', 'specifications', 'configurations', 'randomProducts', 'configurationId'));
     }
 
-    public function showProduct($product_id, $configuration_id)
-    {
-        $product = Product::find($product_id);
-        $configuration = Configuration::find($configuration_id);
-
-        return view('user.index', compact('product', 'configuration'));
+    public function genaral(){
+        $categories = Category::all();
+        return view('user.blog', compact('categories'));
     }
 
+    public function about(){
+        $categories = Category::all();
+        return view('user.about', compact('categories'));
+    }
 
+    public function contact(){
+        $categories = Category::all();
+        return view('user.contact', compact('categories'));
+    }
 }

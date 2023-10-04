@@ -58,8 +58,10 @@ class CartController extends Controller
             // Cập nhật session giỏ hàng với giá trị mới
             $request->session()->put('cart', $cart);
 
+            $cartItemCount = count($cart);
+
             // Điều hướng đến trang giỏ hàng
-            return redirect()->route('user.cart');
+            return redirect()->back()->with('success', 'Add to cart successfully');
         } else {
             // Nếu khách hàng chưa đăng nhập, chuyển hướng họ đến trang đăng nhập
             return redirect()->route('user.loginRegister');

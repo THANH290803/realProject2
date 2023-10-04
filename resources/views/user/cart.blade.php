@@ -187,7 +187,13 @@
                                 <li class="hm-minicart">
                                     <div class="hm-minicart-trigger">
                                         <span class="item-icon"></span>
-                                        <span class="item-text">Cart</span>
+                                        <span class="item-text">Cart
+                                        @if(is_array($cart))
+                                                <span class="cart-item-count">{{ count($cart) }}</span>
+                                            @else
+                                                <span class="cart-item-count">0</span>
+                                            @endif
+                                        </span>
                                     </div>
                                     <span></span>
                                     <div class="minicart">

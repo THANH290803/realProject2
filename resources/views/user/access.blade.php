@@ -38,6 +38,7 @@
     <link rel="stylesheet" href="{{asset('user/css/helper.css')}}">
     <!-- Main Style CSS -->
     <link rel="stylesheet" href="{{asset('user/style.css')}}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
     <!-- Responsive CSS -->
     <link rel="stylesheet" href="{{asset('user/css/responsive.css')}}">
     <!-- Modernizr js -->
@@ -178,7 +179,24 @@
                                 <li class="hm-minicart">
                                     <div class="hm-minicart-trigger">
                                         <span class="item-icon"></span>
-                                        <span class="item-text">Cart</span>
+                                        <span class="item-text">Cart
+                                        @php
+                                            // Get the cart data from the session
+                                            $cart = session('cart');
+
+                                            // Initialize the total quantity
+                                            $totalQuantity = 0;
+
+                                            // Check if $cart is an array or Countable
+                                            if (is_array($cart) || $cart instanceof Countable) {
+                                                // Calculate the total quantity
+                                                foreach ($cart as $cartItem) {
+                                                    $totalQuantity += $cartItem['quantity'];
+                                                }
+                                            }
+
+                                        @endphp
+                                        <span class="cart-item-count">{{ $totalQuantity }}</span></span>
                                     </div>
                                     <span></span>
                                     <div class="minicart">
@@ -1300,6 +1318,8 @@
 <script src="{{asset('user/js/imagesloaded.pkgd.min.js')}}"></script>
 <!-- Mixitup js -->
 <script src="{{asset('user/js/jquery.mixitup.min.js')}}"></script>
+<script src="src/jquery.table2excel.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <!-- Countdown -->
 <script src="{{asset('user/js/jquery.countdown.min.js')}}"></script>
 <!-- Counterup -->
@@ -1319,6 +1339,24 @@
 <!-- Main/Activator js -->
 <script src="{{asset('user/js/main.js')}}"></script>
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: '{{ session('success') }}',
+        });
+        @endif
 
+        @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi!',
+            text: '{{ session('error') }}',
+        });
+        @endif
+    });
+</script>
 <!-- shop-4-column31:48-->
 </html>
