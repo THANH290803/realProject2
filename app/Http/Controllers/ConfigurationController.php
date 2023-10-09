@@ -98,6 +98,11 @@ class ConfigurationController extends Controller
 
         $validatedData['amount'] = $request->input('amount');
 
+        // Kiểm tra nếu giá trị price hoặc amount âm, thì trả về thông báo lỗi
+        if ($validatedData['price'] < 0 || $validatedData['amount'] < 0) {
+            return redirect()->back()->with('error', 'Số lượng không được âm');
+        }
+
         $configuration->update($validatedData);
 
         return redirect()->back()->with('success', 'Cập nhật thành công');
