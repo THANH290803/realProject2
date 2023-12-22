@@ -7,6 +7,7 @@ use App\Http\Requests\StoreConfigurationRequest;
 use App\Http\Requests\UpdateConfigurationRequest;
 use App\Models\Product;
 use App\Models\ProductDetail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
 class ConfigurationController extends Controller
@@ -30,8 +31,8 @@ class ConfigurationController extends Controller
      */
     public function create()
     {
-        $products = Product::all();
-        return view('config.addConfig', compact( 'products'));
+//        $products = Product::all();
+//        return view('config.addConfig', compact( 'products'));
     }
 
     /**
@@ -44,14 +45,14 @@ class ConfigurationController extends Controller
     {
         // Tạo một bản ghi mới trong bảng configurations
         $configuration = Configuration::create($request->all());
-
+        $productID = $request->input('product_id');
         // Tạo một bản ghi mới trong bảng product_details và lưu config_id
         $productDetail = new ProductDetail();
         $productDetail->config_id = $configuration->id;
         $productDetail->save();
 
         // Redirect hoặc thực hiện các hành động khác sau khi lưu thành công
-        return redirect()->route('product.product')->with('success', 'Cấu hình đã được tạo thành công.');
+        return redirect()->back()->with('success', 'Cấu hình đã được tạo thành công.');
     }
 
     /**
@@ -60,9 +61,15 @@ class ConfigurationController extends Controller
      * @param  \App\Models\Configuration  $configuration
      * @return \Illuminate\Http\Response
      */
-    public function show(Configuration $configuration)
+    public function show(Configuration $configuration, $productId)
     {
-        //
+        $product = Product::find($productId);
+        $configurations = DB::table('configurations')
+            ->where('product_id', $productId)
+            ->select('id AS ConfigurationId', 'name AS ConfigurationName', 'amount', 'price')
+            ->get();
+
+        return view('config.config', compact('configurations', 'product', 'configuration'));
     }
 
     /**
@@ -116,7 +123,11 @@ class ConfigurationController extends Controller
      */
     public function destroy(Configuration $configuration)
     {
+        $productDetail = ProductDetail::where('config_id', $configuration->id)->first();
+        if ($productDetail) {
+            $productDetail->delete();
+        }
         $configuration->delete();
-        return redirect()->route('product.product')->with('success', 'Xóa cấu hình thành công');
+        return redirect()->back()->with('success', 'Xóa cấu hình thành công');
     }
 }

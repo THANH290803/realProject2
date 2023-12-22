@@ -106,9 +106,11 @@
                         <tr>
                             <th width="10"><input type="checkbox" id="all"></th>
 {{--                            <th>ID đơn hàng</th>--}}
+                            <th>Mã đơn hàng</th>
                             <th>Khách hàng</th>
                             <th>Địa chỉ</th>
                             <th>Số điện thoại</th>
+{{--                            <th>Nhân viên</th>--}}
                             <th>Ngày đặt đơn hàng</th>
                             <th>Phương thức thanh toán</th>
                             <th>Tổng tiền đơn hàng</th>
@@ -121,9 +123,11 @@
                         <tr>
                             <td width="10"><input type="checkbox" name="check1" value="1"></td>
 {{--                            <td>MT9835</td>--}}
+                            <td>{{ $order->random_id }}</td>
                             <td>{{ $order->customer->name }}</td>
                             <td>{{ $order->customer->address }}</td>
                             <td>{{ $order->customer->phone_number }} </td>
+{{--                            <td>{{ $order->admin_name }} </td>--}}
                             <td>{{ $order->purchase_date }}</td>
                             <td>{{ $order->paymentMethod->name }}</td>
                             <td>{{ number_format($order->totalPrice, 0, ',', '.') }} VND</td>

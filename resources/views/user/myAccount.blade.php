@@ -67,80 +67,69 @@
     }
 </style>
 <style>
-    .hb-menu nav > ul > li > a::after{
-        display: none;
+    .box {
+        display: flex;
+        align-items: center;
+        border-radius: 10px; /* Đặt border-radius cho .box */
+        background-color: #f8f9fa;
     }
 
-    /* Thay đổi màu nền và màu văn bản cho danh sách và mục */
-    .nav-pills.nav-stacked.nav {
-        background-color: #f8f9fa; /* Màu nền của danh sách */
-        border-radius: 10px;
+    .customer-image {
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100px; /* Kích thước chiều cao của ảnh */
+        width: auto; /* Kích thước chiều rộng tự động */
+        margin-bottom: 10px;
     }
 
-    .nav-pills.nav-stacked.nav li {
-        display: block;
-        width: 100%;
-        margin-bottom: 10px; /* Khoảng cách giữa các mục */
-    }
-
-    .nav-pills.nav-stacked.nav li a {
-        display: block;
-        padding: 15px; /* Khoảng cách bên trong mỗi mục */
-        text-decoration: none;
-        color: #333; /* Màu chữ */
-        transition: background-color 0.3s; /* Hiệu ứng màu nền khi hover */
-    }
-
-    /* Hiệu ứng khi di chuột qua mục */
-    .nav-pills.nav-stacked.nav li a:hover {
-        background-color: #007bff; /* Màu nền khi hover */
-        color: #fff; /* Màu chữ khi hover */
-        border-radius: 10px;
-    }
-
-    /* Thêm biểu tượng (FontAwesome) vào mỗi mục */
-    .nav-pills.nav-stacked.nav li i {
-        margin-right: 10px; /* Khoảng cách giữa biểu tượng và văn bản */
-    }
-
-    /* Định dạng container chứa tên khách hàng và hình ảnh */
-    .customer-box {
-        display: flex; /* Hiển thị các phần tử cùng một hàng */
-        align-items: center; /* Căn giữa theo chiều dọc */
-        border: 1px solid #ddd; /* Đường viền xung quanh container */
-        padding: 20px; /* Khoảng cách bên trong container */
-        transition: box-shadow 0.3s, transform 0.3s, background-color 0.3s; /* Hiệu ứng hover */
-        background-color: #fff; /* Màu nền */
-        border-radius: 10px; /* Góc bo tròn */
-    }
-
-    /* Định dạng hình ảnh sản phẩm */
     .customer-image img {
-        max-width: 100px; /* Kích thước tối đa của hình ảnh */
-        height: auto; /* Giữ tỷ lệ khung hình ảnh */
-        margin-right: 20px; /* Khoảng cách giữa hình ảnh và phần tên khách hàng */
+        max-height: 100%; /* Kích thước chiều cao của ảnh là tối đa 100% của .customer-image */
+        max-width: 100%; /* Kích thước chiều rộng của ảnh là tối đa 100% của .customer-image */
+    }
+    .customer-name {
+        margin-left: 10px;
     }
 
-    /* Định dạng phần tên khách hàng */
-    .customer-name h4 {
-        font-size: 24px; /* Kích thước chữ lớn hơn */
-        color: #333; /* Màu chữ */
-        margin: 0; /* Loại bỏ khoảng cách xung quanh phần tên */
+    .panel-body {
+        display: flex;
+        align-items: center;
+        margin-left: 50px;
     }
 
-    /* Hiệu ứng hover */
-    .customer-box:hover {
-        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2); /* Hiển thị bóng đổ lớn hơn khi hover */
-        transform: translateY(-5px); /* Đẩy container lên trên khi hover */
-        background-color: #f8f9fa; /* Màu nền thay đổi khi hover */
-        cursor: pointer; /* Đổi con trỏ thành bàn tay khi hover */
-        transition-timing-function: ease-in-out; /* Hiệu ứng chuyển động mượt mà */
+    .nav-pills {
+        margin-left: 10px;
+        list-style: none;
+        padding: 0;
+        gap: 100px;
     }
 
-    /* Chuyển đổi màu chữ khi hover */
-    .customer-box:hover .customer-name h4 {
-        color: #007bff; /* Màu chữ khi hover */
+    .list-item {
+        margin-left: 15px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        transition: background-color 0.3s, color 0.3s;
     }
+
+    .list-item:hover {
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .nav-pills a {
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+    }
+
+    .nav-pills i {
+        margin-right: 5px;
+    }
+
 
     /* Định dạng container */
     .secce-box {
@@ -266,6 +255,14 @@
         /* Các thuộc tính CSS khác nếu cần */
     }
 
+    .box-khung {
+        border: 1px solid #f8f9fa; /* Đặt viền đen với độ dày 2px */
+        border-radius: 10px; /* Đặt border radius thành 10px để tạo góc cong */
+        /*padding: 10px; !* Thêm padding để tạo khoảng cách từ viền đến nội dung *!*/
+        padding-left: 2.5px;
+        padding-right: 2.5px;
+        display: inline-block; /* Đặt hiển thị là inline-block để nó chỉ chiếm không gian cần thiết */
+    }
 
 </style>
 <body>
@@ -457,54 +454,59 @@
                         <div class="tab-content">
                             <div id="grid-view" class="tab-pane fade active show" role="tabpanel">
                                 <div class="product-area shop-product-area">
+                                    <div class="container">
                                     <div class="row">
-                                        <div class="col-lg-4 col-md-4 col-sm-6 mt-40">
-                                            <!-- single-product-wrap start -->
-                                            <div class="customer-box">
-                                                <div class="customer-image">
-                                                    <img src="{{ asset('img-anhthe/istockphoto-1193260669-612x612.jpg') }}" alt="Li's Product Image">
+                                        <div class="col-lg-12 col-md-12 col-sm-6 mt-40">
+                                            <div class="outer-box">
+                                            <div class="box">
+                                                <!-- single-product-wrap start -->
+                                                <div class="customer-box">
+                                                    <div class="customer-image">
+                                                        <img src="{{ asset('img-anhthe/istockphoto-1193260669-612x612.jpg') }}" alt="Li's Product Image">
+                                                    </div>
+                                                    <div class="customer-name">
+                                                        <h4>{{ $customer->name }}</h4>
+                                                    </div>
                                                 </div>
-                                                <div class="customer-name">
-                                                    <h4>{{ $customer->name }}</h4>
+                                                <div class="panel-body"><!--  panel-body Begin  -->
+                                                    <ul class="nav-pills nav-stacked nav"><!--  nav-pills nav-stacked nav Begin  -->
+                                                        <li class="list-item">
+                                                            <a href="{{ asset('user/my-account') }}">
+                                                                <i class="fa fa-list"></i> My Orders
+                                                            </a>
+                                                        </li>
+
+                                                        <li class="list-item">
+                                                            <a href="{{ asset('user/edit-account') }}">
+                                                                <i class="fa fa-pencil"></i> Edit Account
+                                                            </a>
+                                                        </li>
+                                                        <li class="list-item">
+                                                            <a href="{{ asset('user/change-pass') }}">
+                                                                <i class="fa fa-user"></i> Change Password
+                                                            </a>
+                                                        </li>
+
+                                                        <li class="list-item">
+                                                            <a href="{{ route('user.logout') }}">
+                                                                <i class="fa fa-sign-out"></i> Log Out
+                                                            </a>
+                                                        </li>
+                                                    </ul><!--  nav-pills nav-stacked nav Begin  -->
                                                 </div>
+                                                <!-- single-product-wrap end -->
                                             </div>
-                                            <div class="panel-body"><!--  panel-body Begin  -->
-                                                <ul class="nav-pills nav-stacked nav"><!--  nav-pills nav-stacked nav Begin  -->
-                                                    <li class="">
-                                                        <a href="{{ asset('user/my-account') }}">
-                                                            <i class="fa fa-list"></i> My Orders
-                                                        </a>
-                                                    </li>
-
-                                                    <li class="">
-                                                        <a href="{{ asset('user/edit-account') }}">
-                                                            <i class="fa fa-pencil"></i> Edit Account
-                                                        </a>
-                                                    </li>
-                                                    <li class="">
-                                                        <a href="{{ asset('user/change-pass') }}">
-                                                            <i class="fa fa-user"></i> Change Password
-                                                        </a>
-                                                    </li>
-
-                                                    <li>
-                                                        <a href="{{ route('user.logout') }}">
-                                                            <i class="fa fa-sign-out"></i> Log Out
-                                                        </a>
-                                                    </li>
-                                                </ul><!--  nav-pills nav-stacked nav Begin  -->
-                                            </div>
-                                            <!-- single-product-wrap end -->
                                         </div>
-                                        <div class="col-lg-8 col-md-4 col-sm-6 mt-40">
+                                        </div>
+                                            </div>
+                                        <div class="col-lg-12 col-md-12 col-sm-12 mt-40" style="padding: 0px">
                                             <div class="secce-box">
                                                 <h3 style="text-align: center">My Order</h3>
                                                 <p>Your orders are all here</p> <hr>
-                                                <div class="table-wrapper">
-                                                    <div class="scrolling-table">
                                                     <table class="custom-table">
                                                         <thead>
                                                         <tr>
+                                                            <th>Mã đơn hàng</th>
                                                             <th>Customer Name</th>
                                                             <th>Địa chỉ</th>
                                                             <th>Số điện thoại</th>
@@ -519,6 +521,7 @@
                                                         <tbody>
                                                         @foreach($orders as $order)
                                                         <tr>
+                                                            <td>{{ $order->random_id }}</td>
                                                             <td>{{ $order->customer->name }}</td>
                                                             <td>{{ $order->customer->address }}</td>
                                                             <td>{{ $order->customer->phone_number }}</td>
@@ -526,17 +529,17 @@
                                                             <td>{{ $order->paymentMethod->name }}</td>
                                                             <td>
                                                                 @if($order->status == 1)
-                                                                    {{ "Chờ xác nhận" }}
+                                                                    <span class="box-khung" style="color: black; background-color: #fda602">{{ "Chờ xác nhận" }}</span>
                                                                 @elseif($order->status == 2)
-                                                                    {{ "Xác nhận đơn hàng" }}
+                                                                    <span class="box-khung" style="color: green; background-color: yellow">{{ "Xác nhận đơn hàng" }}</span>
                                                                 @elseif($order->status == 3)
-                                                                    {{ "Đang giao hàng / Đã giao hàng cho bên vận chuyển" }}
+                                                                    <span class="box-khung" style="color: blue; background-color: pink">{{ "Đang giao hàng / Đã giao hàng cho bên vận chuyển" }}</span>
                                                                 @elseif($order->status == 4)
-                                                                    {{ "Đã giao hàng" }}
+                                                                    <span class="box-khung" style="color: purple; background-color: #b7b7ff">{{ "Đã giao hàng" }}</span>
                                                                 @elseif($order->status == 5)
-                                                                    {{ "Hoàn Thành Đơn Hàng" }}
+                                                                    <span class="box-khung" style="color: #ff9b00; background-color: #c5e7ff">{{ "Hoàn Thành Đơn Hàng" }}</span>
                                                                 @elseif($order->status == 6)
-                                                                    {{ "Hủy đơn hàng" }}
+                                                                    <span class="box-khung" style="color: red; background-color: beige">{{ "Hủy đơn hàng" }}</span>
                                                                 @endif
                                                             </td>
                                                             <td>{{ number_format($order->totalPrice, 0, ',', '.') }} VND</td>
@@ -564,8 +567,6 @@
                                                         @endforeach
                                                         </tbody>
                                                     </table>
-                                                    </div>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

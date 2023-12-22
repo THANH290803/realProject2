@@ -101,7 +101,7 @@
 <main class="app-content">
     <div class="app-title">
         <ul class="app-breadcrumb breadcrumb side">
-            <li class="breadcrumb-item active"><a href="#"><b>Danh sách sản phẩm</b></a></li>
+            <li class="breadcrumb-item active"><a href="#"><b>Danh sách cấu hình</b></a></li>
         </ul>
         <div id="clock"></div>
     </div>
@@ -111,21 +111,13 @@
                 <div class="tile-body">
                     <div class="row element-button">
                         <div class="col-sm-2">
-
-                            <a class="btn btn-add btn-sm" href="{{asset('product/add_product')}}" title="Thêm"><i class="fas fa-plus"></i>
-                                Tạo mới sản phẩm</a>
-                        </div>
-                        <div class="col-sm-2">
-                            <a class="btn btn-add btn-sm" href="{{ asset('cate/categories') }}"><i class="fas fa-folder-open"></i> Xem danh mục</a>
-                        </div>
-                        <div class="col-sm-2">
-                            <a class="btn btn-add btn-sm" href="{{asset('brand/brand')}}"><i class="fas fa-flag"></i> Xem thương hiệu</a>
+                            <a class="btn btn-add btn-sm" id="openConfigDialog" title="Thêm"><i class="fas fa-plus"></i>
+                                Tạo mới cấu hình</a>
                         </div>
                         <div class="col-sm-2">
                             <a class="btn btn-delete btn-sm nhap-tu-file" type="button" title="Nhập" onclick="myFunction(this)"><i
                                     class="fas fa-file-upload"></i> Tải từ file</a>
                         </div>
-
                         <div class="col-sm-2">
                             <a class="btn btn-delete btn-sm print-file" type="button" title="In" onclick="myApp.printTable()"><i
                                     class="fas fa-print"></i> In dữ liệu</a>
@@ -153,49 +145,148 @@
                         <thead>
                         <tr>
                             <th width="10"><input type="checkbox" id="all"></th>
-{{--                            <th>Mã sản phẩm</th>--}}
-                            <th>Tên sản phẩm</th>
-                            <th>Ảnh</th>
+                            {{--                            <th>Mã sản phẩm</th>--}}
+                            <th>Tên cấu hình</th>
                             <th>Số lượng</th>
-                            <th>Danh mục</th>
-                            <th>Thương hiệu</th>
+                            <th>Giá tiền</th>
                             <th>Chức năng</th>
                         </tr>
                         </thead>
 
                         <tbody>
-                        @foreach($products as $product)
-                        <tr>
-                            <td width="10"><input type="checkbox" name="check1" value="1"></td>
-{{--                            <td>71309005</td>--}}
-                            <td>{{ $product->NameProduct  }}</td>
-                            <td><img src="{{ asset('img-sanpham/' . $product->img) }}" alt="" width="100%;" height="100px"></td>
-                            <td>{{ $product->totalAmount ?? 0 }}</td>
-                            <td>{{ $product->CategoryName }}</td>
-                            <td>{{ $product->BrandName }}</td>
-                            <td>
-                                <a class="btn btn-primary btn-sm edit" href="{{ route('product.editProduct', $product->id)}}" title="Sửa">
-                                    <i class="fas fa-edit"></i></a>
-{{--                                @if ($product->ConfigurationId)--}}
-                                <a class="btn btn-primary btn-sm view-details" href="{{ route('config.config', $product->id) }}" style="background-color: #FFEB3B;" title="Xem Chi Tiết">
-                                    <i class="fas fa-info-circle"></i>
-                                </a>
-{{--                                @else--}}
-{{--                                    --}}{{-- Handle the case where ConfigurationId is not set --}}
-{{--                                @endif--}}
-                                <form method="post" action="{{ route('product.destroy', $product->id) }}" style="display: inline-block;">
-                                    @method('DELETE')
-                                    @csrf
-                                    <button class="btn btn-primary btn-sm trash" title="Xóa" type="submit"
-                                            onclick="myFunction(this)"><i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
+                        @foreach($configurations as $config)
+                            <tr>
+                                <td width="10"><input type="checkbox" name="check1" value="1"></td>
+                                {{--                            <td>71309005</td>--}}
+                                <td>{{ $config->ConfigurationName }}</td>
+                                <td>{{ $config->amount }}</td>
+                                <td>{{ number_format($config->price, 0, ',', '.') }} VND</td>
+                                <td>
+                                    <a class="btn btn-primary btn-sm edit" href="#" title="Sửa" data-id="{{ $config->ConfigurationId }}" data-name="{{ $config->ConfigurationName }}" data-amount="{{ $config->amount }}" data-price="{{ $config->price }}">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                @if ($config->ConfigurationId)
+                                        <a class="btn btn-primary btn-sm view-details" href="{{ route('product.showDetail', ['configurationId' => $config->ConfigurationId]) }}" style="background-color: #FFEB3B;" title="Xem Chi Tiết">
+                                            <i class="fas fa-search"></i>
+                                        </a>
+                                    @else
+                                         Handle the case where ConfigurationId is not set
+                                    @endif
+                                    <form method="post" action="{{ route('config.destroy', $config->ConfigurationId) }}" style="display: inline-block;">
+                                        @method('DELETE')
+                                        @csrf
+                                        <button class="btn btn-primary btn-sm trash" title="Xóa" type="submit"
+                                                onclick="myFunction(this)"><i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
                         @endforeach
                         </tbody>
 
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal dialog for the form -->
+    <div class="modal fade" id="configModal" tabindex="-1" role="dialog" aria-labelledby="configModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document"> <!-- Adjust the modal size as needed -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="configModalLabel" style="color: rgba(87,125,248,0.72); font-size: 25px">Tạo mới cấu hình</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="row" method="post" action="{{ route('config.store') }}">
+                        @csrf
+                        <div class="form-group col-md-12">
+                            <label for="name" class="control-label">Nhập tên cấu hình</label>
+                            <input class="form-control" id="name" name="name" type="text">
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="amount" class="control-label">Số lượng của cấu hình</label>
+                            <input class="form-control" id="amount" name="amount" type="number" required>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="price" class="control-label">Nhập giá tiền cấu hình</label>
+                            <input class="form-control" id="price" name="price" type="text" required>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        </div>
+                        <button class="btn btn-primary" id="addConfigEntry" style="margin-left: 15px; margin-right: 15px; margin-bottom: 15px">Lưu lại</button>
+                        <a class="btn btn-secondary" data-dismiss="modal" style="margin-bottom: 15px">Hủy bỏ</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{{--        <div id="edit-dialog" style="display: none;">--}}
+{{--        <div class="card">--}}
+{{--            <div class="card-header">Chỉnh sửa cấu hình</div>--}}
+{{--            <div class="card-body">--}}
+{{--                <form method="POST" action="{{ route('config.update', ['configuration' => $config->ConfigurationId ]) }}">--}}
+{{--                    @csrf--}}
+{{--                    @method('PUT')--}}
+
+{{--                    <!-- Thêm các trường chỉnh sửa dữ liệu ở đây -->--}}
+{{--                    <div class="form-group">--}}
+{{--                        <label for="name">Tên cấu hình</label>--}}
+{{--                        <input type="text" name="name" id="name" class="form-control" value="{{ $config->ConfigurationName  }}">--}}
+{{--                    </div>--}}
+{{--                    <div class="form-group">--}}
+{{--                        <label for="amount">Số lượng</label>--}}
+{{--                        <input type="text" name="amount" id="amount" class="form-control" value="{{ $config->amount }}">--}}
+{{--                    </div>--}}
+{{--                    <div class="form-group">--}}
+{{--                        <label for="price">Giá tiền</label>--}}
+{{--                        <input type="text" name="price" id="price" class="form-control" value="{{ $config->price }}">--}}
+{{--                    </div>--}}
+
+{{--                    <!-- Thêm các trường khác ở đây -->--}}
+
+{{--                    <button type="submit" class="btn btn-primary">Lưu</button>--}}
+{{--                    <button type="button" onclick="closeEditDialog()" class="btn btn-secondary">Hủy</button>--}}
+{{--                </form>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
+
+    <div class="modal fade" id="editConfigModal" tabindex="-1" role="dialog" aria-labelledby="editConfigModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editConfigModalLabel" style="color: rgba(87, 125, 248, 0.72); font-size: 25px">Sửa thông tin cấu hình</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="row" method="post" action="{{ route('config.update', ['id' => $config->ConfigurationId ]) }}">
+                        @csrf
+                        @method('PUT')
+                        <div class="form-group col-md-12">
+                            <label for="name" class="control-label">Tên cấu hình</label>
+                            <input class="form-control" id="editName" name="name" type="text">
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="amount" class="control-label">Số lượng của cấu hình</label>
+                            <input class="form-control" id="editAmount" name="amount" type="number" required>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for "price" class="control-label">Giá tiền cấu hình</label>
+                            <input class="form-control" id="editPrice" name="price" type="text" required>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        </div>
+                        <button class="btn btn-primary" id="saveConfigChanges" style="margin-left: 15px; margin-right: 15px; margin-bottom: 15px">Lưu thay đổi</button>
+                        <a class="btn btn-secondary" data-dismiss="modal" style="margin-bottom: 15px">Hủy bỏ</a>
+                    </form>
                 </div>
             </div>
         </div>
@@ -222,6 +313,9 @@
 <!-- Data table plugin-->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
+<!-- jQuery -->
+<!-- Bootstrap JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="{{asset('admin/js/plugins/jquery.dataTables.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('admin/js/plugins/dataTables.bootstrap.min.js')}}"></script>
 <script type="text/javascript">
@@ -409,6 +503,38 @@
         @endif
     });
 </script>
+<script>
+    // JavaScript to handle the modal dialog
+    $(document).ready(function () {
+        $('#openConfigDialog').click(function (e) {
+            e.preventDefault();
+            // Show the modal dialog
+            $('#configModal').modal('show');
+        });
+    });
+</script>
+<script>
+    // JavaScript to populate the modal when the "Edit" button is clicked
+    $(document).on('click', '.edit', function() {
+        var configId = $(this).data('id');
+        var configName = $(this).data('name');
+        var configAmount = $(this).data('amount');
+        var configPrice = $(this).data('price');
+
+        // Populate the modal form with the data
+        $('#editName').val(configName);
+        $('#editAmount').val(configAmount);
+        $('#editPrice').val(configPrice);
+
+        $("#editConfigModal").modal("show");
+
+        // Set the form action URL
+        $('#editConfigModal form').attr('action', '/realProject2/public/config/configurations/' + configId);
+    });
+
+    // Add additional JavaScript to handle form submission and AJAX requests for updating the configuration on the server.
+</script>
+
 </body>
 
 </html>

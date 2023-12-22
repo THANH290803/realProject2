@@ -42,25 +42,25 @@
         <div class="col-md-12 col-lg-12">
             <div class="row">
                 <!-- col-6 -->
-                <div class="col-md-6">
-                    <div class="widget-small primary coloured-icon"><i class='icon bx bxs-user-account fa-3x'></i>
-                        <div class="info">
-                            <h4>Tổng khách hàng</h4>
-                            <p><b>{{ $count }} khách hàng</b></p>
-                            <p class="info-tong">Tổng số khách hàng được quản lý.</p>
-                        </div>
-                    </div>
-                </div>
+{{--                <div class="col-md-6">--}}
+{{--                    <div class="widget-small primary coloured-icon"><i class='icon bx bxs-user-account fa-3x'></i>--}}
+{{--                        <div class="info">--}}
+{{--                            <h4>Tổng khách hàng</h4>--}}
+{{--                            <p><b>{{ $count }} khách hàng</b></p>--}}
+{{--                            <p class="info-tong">Tổng số khách hàng được quản lý.</p>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
                 <!-- col-6 -->
-                <div class="col-md-6">
-                    <div class="widget-small info coloured-icon"><i class='icon bx bxs-data fa-3x'></i>
-                        <div class="info">
-                            <h4>Tổng sản phẩm</h4>
-                            <p><b>{{ $total }} sản phẩm</b></p>
-                            <p class="info-tong">Tổng số sản phẩm được quản lý.</p>
-                        </div>
-                    </div>
-                </div>
+{{--                <div class="col-md-6">--}}
+{{--                    <div class="widget-small info coloured-icon"><i class='icon bx bxs-data fa-3x'></i>--}}
+{{--                        <div class="info">--}}
+{{--                            <h4>Tổng sản phẩm</h4>--}}
+{{--                            <p><b>{{ $total }} sản phẩm</b></p>--}}
+{{--                            <p class="info-tong">Tổng số sản phẩm được quản lý.</p>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
                 <!-- col-6 -->
                 <div class="col-md-6">
                     <div class="widget-small warning coloured-icon"><i class='icon bx bxs-shopping-bags fa-3x'></i>
@@ -75,86 +75,21 @@
                 <div class="col-md-6">
                     <div class="widget-small danger coloured-icon"><i class='icon bx bxs-error-alt fa-3x'></i>
                         <div class="info">
-                            <h4>Các đơn hàng đã bị hủy</h4>
-                            <p><b>{{ $cancel }} sản phẩm</b></p>
-                            <p class="info-tong">Số đơn hàng mà khách hàng đã hủy.</p>
+                            <h4>Các sản phẩm đã hết hàng</h4>
+                            <p><b>{{ $outOfStockProductsCount }} sản phẩm</b></p>
+                            <p class="info-tong">Số sản phẩm mà đã hết hàng.</p>
                         </div>
                     </div>
                 </div>
-                <!-- col-12 -->
-{{--                <div class="col-md-12">--}}
-{{--                    <div class="tile">--}}
-{{--                        <h3 class="tile-title">Tình trạng đơn hàng</h3>--}}
-{{--                        <div>--}}
-{{--                            <table class="table table-bordered">--}}
-{{--                                <thead>--}}
-{{--                                <tr>--}}
-{{--                                    <th>ID đơn hàng</th>--}}
-{{--                                    <th>Tên khách hàng</th>--}}
-{{--                                    <th>Tổng tiền</th>--}}
-{{--                                    <th>Trạng thái</th>--}}
-{{--                                </tr>--}}
-{{--                                </thead>--}}
-{{--                                <tbody>--}}
-{{--                                @foreach($latestOrders as $latestOrder)--}}
-{{--                                <tr>--}}
-{{--                                    <td>AL3947</td>--}}
-{{--                                    <td></td>--}}
-{{--                                    <td>--}}
-{{--                                        {{ $latestOrder->until_price }}--}}
-{{--                                    </td>--}}
-{{--                                    <td>--}}
-{{--                                        @if($latestOrder->status == 1)--}}
-{{--                                            <span class="badge bg-primary">Chờ xác nhận</span>--}}
-{{--                                        @elseif($latestOrder->status == 2)--}}
-{{--                                            <span class="badge bg-info">Đã duyệt đơn hàng</span>--}}
-{{--                                        @elseif($latestOrder->status == 3)--}}
-{{--                                            <span class="badge bg-warning">Đang giao hàng</span>--}}
-{{--                                        @elseif($latestOrder->status == 4)--}}
-{{--                                            <span class="badge bg-light">Đã giao hàng cho khách</span>--}}
-{{--                                        @elseif($latestOrder->status == 5)--}}
-{{--                                            <span class="badge bg-success">Khách hàng đã nhận đơn hàng</span>--}}
-{{--                                        @elseif($latestOrder->status == 6)--}}
-{{--                                            <span class="badge bg-danger">Đã hủy</span>--}}
-{{--                                        @endif--}}
-{{--                                    </td>--}}
-{{--                                </tr>--}}
-{{--                                @endforeach--}}
-{{--                                </tbody>--}}
-{{--                            </table>--}}
-{{--                        </div>--}}
-{{--                        <!-- / div trống-->--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--                <!-- / col-12 -->--}}
-{{--                <!-- col-12 -->--}}
-{{--                <div class="col-md-12">--}}
-{{--                    <div class="tile">--}}
-{{--                        <h3 class="tile-title">Khách hàng mới</h3>--}}
-{{--                        <div>--}}
-{{--                            <table class="table table-hover">--}}
-{{--                                <thead>--}}
-{{--                                <tr>--}}
-{{--                                    <th>ID</th>--}}
-{{--                                    <th>Tên khách hàng</th>--}}
-{{--                                    <th>Email</th>--}}
-{{--                                    <th>Số điện thoại</th>--}}
-{{--                                </tr>--}}
-{{--                                </thead>--}}
-{{--                                <tbody>--}}
-{{--                                <tr>--}}
-{{--                                    <td>#183</td>--}}
-{{--                                    <td>Hột vịt muối</td>--}}
-{{--                                    <td>21/7/1992</td>--}}
-{{--                                    <td><span class="tag tag-success">0921387221</span></td>--}}
-{{--                                </tr>--}}
-{{--                                </tbody>--}}
-{{--                            </table>--}}
-{{--                        </div>--}}
-
-{{--                    </div>--}}
-{{--                </div>--}}
-                <!-- / col-12 -->
+                <div class="col-md-12">
+                    <div class="widget-small primary coloured-icon"><i class='icon' style="background-color: beige; color:#ffeb3bab;">&#x20AB;</i>
+                        <div class="info">
+                            <h4>Doanh thu</h4>
+                            <p><b>{{ number_format($totalRevenue, 0, ',', '.') }} VND</b></p>
+                            <p class="info-tong">Doanh thu trong một tháng.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <!--END left-->
@@ -183,6 +118,7 @@
 <script src="{{asset('admin/js/plugins/pace.min.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!--===============================================================================================-->
 <script type="text/javascript" src="{{asset('admin/js/plugins/chart.js')}}}"></script>
 <!--===============================================================================================-->
@@ -278,6 +214,42 @@
         @endif
     });
 </script>
+<script>
+    // Data for the chart
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var revenueData = [/* Replace with your monthly revenue data */];
+
+    var data = {
+        labels: months,
+        datasets: [{
+            label: 'Monthly Revenue (VND)',
+            data: revenueData,
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+        }]
+    };
+
+    var options = {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    };
+
+    // Get the canvas element
+    var ctx = document.getElementById('revenueChart').getContext('2d');
+
+    // Create the line chart
+    var revenueChart = new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: options
+    });
+</script>
+
+
 </body>
 
 </html>

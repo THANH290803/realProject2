@@ -41,6 +41,7 @@
     <!-- Responsive CSS -->
     <link rel="stylesheet" href="{{asset('user/css/responsive.css')}}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
     <!-- Modernizr js -->
     <script src="{{asset('user/js/vendor/modernizr-2.8.3.min.js')}}"></script>
 </head>
@@ -187,12 +188,20 @@
                                 <li class="hm-minicart">
                                     <div class="hm-minicart-trigger">
                                         <span class="item-icon"></span>
+                                        <?php
+                                        if (is_array($cart)) {
+                                            $totalQuantity = 0;
+                                            foreach ($cart as $item) {
+                                                if (isset($item['quantity'])) {
+                                                    $totalQuantity += $item['quantity'];
+                                                }
+                                            }
+                                        } else {
+                                            $totalQuantity = 0;
+                                        }
+                                        ?>
                                         <span class="item-text">Cart
-                                        @if(is_array($cart))
-                                                <span class="cart-item-count">{{ count($cart) }}</span>
-                                            @else
-                                                <span class="cart-item-count">0</span>
-                                            @endif
+                                                <span class="cart-item-count">{{ $totalQuantity }}</span>
                                         </span>
                                     </div>
                                     <span></span>
@@ -289,7 +298,7 @@
                                 @foreach($cart as $key => $cartItem)
                                 <tr>
                                     <td class="li-product-remove">
-                                        <a href="{{ route('cart.remove', ['index' => $key]) }}"><i class="fa fa-times"></i></a>
+                                        <a href="{{ route('cart.remove', ['index' => $key]) }}"  class="custom-confirm" data-confirm="Bạn có chắc chắn muốn xóa mục này?"><i class="fa fa-times"></i></a>
                                     </td>
                                     <td class="li-product-thumbnail">
                                         <a href="#"><img src="{{ asset('img-sanpham/' . $cartItem['product']->img) }}" style="width: 150px;" alt="Li's Product Image"></a>
@@ -305,7 +314,7 @@
                                     <td class="quantity">
                                         <label>Quantity</label>
                                         <div class="cart-plus-minus">
-                                            <input type="number" name="quantity[{{ $key }}]" value="{{ $cartItem['quantity'] }}" class="quantity-input" min="1">
+                                            <input type="number" name="quantity[{{ $key }}]" value="{{ $cartItem['quantity'] }}" oninput="validity.valid||(value='1');" class="quantity-input" min="1">
 {{--                                            <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>--}}
 {{--                                            <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>--}}
                                         </div>
@@ -320,7 +329,7 @@
                             <div class="col-12" >
                                 <div class="coupon-all">
                                 <div class="coupon 1">
-                                    <a href="{{ route('cart.clear') }}" type="submit" class="button" style="background: red; width: 150px; text-align: center;">Clear Cart</a>
+                                    <a href="{{ route('cart.clear') }}" type="submit" class="button custom-confirm" data-confirm="Bạn có chắc chắn muốn xóa toàn bộ giỏ hàng?"  style="background: red; width: 150px; text-align: center;">Clear Cart</a>
                                 </div>
                                 <div class="coupon2">
                                     <button class="button" type="submit">Update cart</button>
@@ -329,21 +338,28 @@
                             </div>
                         </div>
                     </form>
-                        <div class="row">
-                            <form class="col-md-5 ml-8" id="paymentForm">
-                                <div class="cart-page-total" id="qrCodeSection" style="display: none">
-                                    <h2>QR Code</h2>
-                                    <ul style="width: 251.6px; margin-left: 150px;">
-                                        <li>
-                                            <img src="{{ asset('images/qr.PNG') }}" style="width: 100%;">
-                                        </li>
-                                    </ul>
-{{--                                    <button type="submit" style="width: 150px; text-align: center;" id="buyNowButton">Buy Now</button>--}}
-                                </div>
-                            </form>
-                            <form class="col-md-5 ml-auto" method="post" action="{{ route('user.buyNow') }}">
+                        <form class="row" method="post" action="{{ route('user.buyNow') }}">
+                            @csrf
+                            <div class="cart-page-total" id="qrCodeSection" style="display: none">
+                                <h2>QR Code</h2>
+                                <ul style="width: 251.6px; margin-left: 100px;">
+                                    <li>
+                                        <img src="{{ asset('images/qr.PNG') }}" style="width: 100%;">
+                                    </li>
+                                </ul>
+                                <br>
+                                @php
+                                    $random = \Illuminate\Support\Str::random(12);
+                                    $randomIDs = strtoupper($random);
+                                @endphp
+                                <p style="text-align: center">Khi bạn chuyển khoản hãy ghi nội dung chuyển khoản như sau: </p>
+                                <p>Mã đơn hàng: <input name="random_id" type="text" value="{{ $randomIDs }}" style="text-align: center" readonly></p>
+                                {{--                                    <p style="text-align: center">1. Mã đơn hàng {{ $randomIDs }}</p>--}}
+                                <input type="text" value="Ngày đặt hàng" style="text-align: center" disabled>
+                                {{--                                    <button type="submit" style="width: 150px; text-align: center;" id="buyNowButton">Buy Now</button>--}}
+                            </div>
+                            <div class="col-md-5 ml-auto">
                                 <div class="cart-page-total" >
-                                    @csrf
                                     <h2>Cart totals</h2>
                                     <ul>
                                         <li style="padding: 0px; border-radius: 5px">
@@ -358,8 +374,8 @@
                                     </ul>
                                     <button type="submit" style="width: 150px; text-align: center;" id="buyNowButton">Buy Now</button>
                                 </div>
-                            </form>
-                        </div>
+                            </div>
+                        </form>
                         <div id="orderSuccessMessage" style="display: none; text-align: center; margin-top: 20px;">
                             Bạn đã đặt hàng thành công!
                         </div>
@@ -631,6 +647,8 @@
 <script src="{{asset('user/js/jquery.counterup.min.js')}}"></script>
 <!-- Waypoints -->
 <script src="{{asset('user/js/waypoints.min.js')}}"></script>
+<script src="src/jquery.table2excel.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <!-- Barrating -->
 <script src="{{asset('user/js/jquery.barrating.min.js')}}"></script>
 <!-- Jquery-ui -->
@@ -699,7 +717,65 @@
     });
 
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: '{{ session('success') }}',
+        });
+        @endif
 
+        @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi!',
+            text: '{{ session('error') }}',
+        });
+        @endif
+    });
+</script>
+<script>
+    document.querySelectorAll('.custom-confirm').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Xác nhận xóa',
+                text: link.getAttribute('data-confirm'),
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location = link.getAttribute('href');
+                }
+            });
+        });
+    });
+</script>
+<script>
+    document.querySelectorAll('.custom-confirm').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Xác nhận xóa',
+                text: link.getAttribute('data-confirm'),
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location = link.getAttribute('href');
+                }
+            });
+        });
+    });
+</script>
 
 </body>
 <!-- shopping-cart31:32-->

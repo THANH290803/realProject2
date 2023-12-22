@@ -375,10 +375,14 @@
                                     @foreach($configurations as $configuration)
                                         @if($configuration->name !== null)
                                             <div href="" class="form-group  col-md-3 configuration-link" data-configuration="{{ json_encode($configuration) }}" style="padding-left: 0px">
-                                                <div class="product-variants-content {{ $configuration->active ? 'active' : '' }}">
+                                                @php
+                                                    $activeID =  "$configurationId";
+                                                @endphp
+                                                <div class="product-variants-content @if($configuration->id == $activeID) active @endif">
+                                                    <input type="hidden" value="{{ $configuration->id }}">
                                                     <label style="margin-bottom: 0px; color: black">{{ $configuration->name }}</label>
                                                     <label style="margin-bottom: 0px; color: red">{{ number_format($configuration->price, 0, ',', '.') }} VND</label>
-                                                    <i class="icon-active" style="{{ $configuration->active ? 'display: block;' : 'display: none;' }}">&#10004;</i>
+                                                    <i class="icon-active @if($configuration->id == $activeID) active @endif"" >&#10004;</i>
                                                 </div>
                                             </div>
                                         @endif
@@ -974,65 +978,26 @@
 <!-- Main/Activator js -->
 <script src="{{asset('user/js/main.js')}}"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Lấy tất cả các liên kết cấu hình
-        const configurationLinks = document.querySelectorAll(".configuration-link");
+    document.addEventListener('DOMContentLoaded', function () {
+        const configurationLinks = document.querySelectorAll('.configuration-link');
 
-        // Xử lý sự kiện khi một liên kết cấu hình được bấm
-        configurationLinks.forEach((link) => {
-            link.addEventListener("click", function (event) {
-                event.preventDefault(); // Ngăn chặn trình duyệt chuyển hướng
-
-                // Lấy thông tin cấu hình từ data-attribute
-                const configurationData = JSON.parse(link.getAttribute("data-configuration"));
-
-                // Hiển thị thông tin cấu hình (ví dụ: log ra console)
-                console.log("Selected Configuration:", configurationData);
-
-                // Đoạn này, bạn có thể sử dụng thông tin cấu hình để hiển thị sản phẩm tương ứng hoặc thực hiện các thao tác khác.
-            });
-        });
-    });
-</script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Lấy tất cả các liên kết cấu hình
-        const configurationLinks = document.querySelectorAll(".configuration-link");
-
-        // Tìm cấu hình ban đầu được đánh dấu là active
-        const initialActiveConfiguration = Array.from(configurationLinks).find(link => {
-            const configurationData = JSON.parse(link.getAttribute("data-configuration"));
-            return configurationData.active;
-        });
-
-        // Nếu tìm thấy cấu hình ban đầu, đảm bảo rằng nó là active
-        if (initialActiveConfiguration) {
-            const initialConfigurationData = JSON.parse(initialActiveConfiguration.getAttribute("data-configuration"));
-            initialActiveConfiguration.querySelector(".product-variants-content").classList.add("active");
-            initialActiveConfiguration.querySelector(".icon-active").style.display = "block";
-            initialConfigurationData.active = true;
-        }
-
-        // Xử lý sự kiện khi một liên kết cấu hình được bấm
-        configurationLinks.forEach((link) => {
-            link.addEventListener("click", function (event) {
-                event.preventDefault(); // Ngăn chặn trình duyệt chuyển hướng
-
-                // Lấy thông tin cấu hình từ data-attribute
-                const configurationData = JSON.parse(link.getAttribute("data-configuration"));
-
-                // Loại bỏ lớp CSS "active" và biểu tượng active từ tất cả các cấu hình
-                configurationLinks.forEach((otherLink) => {
-                    const otherConfiguration = JSON.parse(otherLink.getAttribute("data-configuration"));
-                    otherLink.querySelector(".product-variants-content").classList.remove("active");
-                    otherLink.querySelector(".icon-active").style.display = "none";
-                    otherConfiguration.active = false; // Đảm bảo cập nhật thuộc tính active
+        configurationLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                configurationLinks.forEach(element => {
+                    element.querySelector('.product-variants-content').classList.remove('active');
+                    element.querySelector('.icon-active').classList.remove('active');
                 });
 
-                // Thêm lớp CSS "active" và biểu tượng active cho cấu hình được chọn
-                link.querySelector(".product-variants-content").classList.add("active");
-                link.querySelector(".icon-active").style.display = "block";
-                configurationData.active = true; // Đảm bảo cập nhật thuộc tính active
+                const productVariantsContent = this.querySelector('.product-variants-content');
+                const iconActive = this.querySelector('.icon-active');
+                productVariantsContent.classList.add('active');
+                iconActive.classList.add('active');
+
+                const configurationData = JSON.parse(this.getAttribute('data-configuration'));
+                const selectedConfigurationID = configurationData.id;
+
+                // Sử dụng selectedConfigurationID, ví dụ: gửi nó qua Ajax hoặc xử lý thêm
+                console.log('Selected Configuration ID:', selectedConfigurationID);
             });
         });
     });

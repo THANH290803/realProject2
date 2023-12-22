@@ -319,6 +319,7 @@
 {{--                                    <th>Địa chỉ</th>--}}
 {{--                                    <th>Số điện thoại</th>--}}
                                     <th>Sản phẩm</th>
+                                    <th style="width: 150px;">Hình ảnh</th>
                                     <th>Số lượng</th>
                                     <th>Giá</th>
                                     <th>Phương thức thanh toán</th>
@@ -330,6 +331,7 @@
 {{--                                    <td>{{ $orderDetail->address }}</td>--}}
 {{--                                    <td>{{ $orderDetail->phone_number }}</td>--}}
                                     <td>{{ $orderDetail->NameProduct }} {{ $orderDetail->nameconfig }}</td>
+                                    <td><img src="{{ asset('img-sanpham/' . $orderDetail->img) }}" alt="" width="100%;" height="100px"></td>
                                     <td>{{ $orderDetail->amount }}</td>
                                     <td>{{ number_format($orderDetail->price, 0, ',', '.') }} VND</td>
                                     <td>{{ $orderDetail->payment_method }}</td>
@@ -337,7 +339,7 @@
                                 </tr>
                                 @endforeach
                                 <tr>
-                                    <td colspan="4">
+                                    <td colspan="5">
                                         @php
                                             $totalPrice = 0;
                                             foreach ($orderDetails as $orderDetail) {
@@ -347,7 +349,6 @@
                                     Tổng tiền:
                                         <td style="background-color: #16f8cf">{{ number_format($totalPrice, 0, ',', '.') }} VND</td>
                                     </td>
-
                                 </tr>
                             </table>
                         </div>

@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class OrderController extends Controller
 {
@@ -14,19 +17,40 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $orders = Order::with('customer', 'paymentMethod', 'orderDetails')
-            ->orderBy('purchase_date', 'desc') // Sắp xếp theo thời gian mua giảm dần (mới nhất lên đầu)
-            ->orderBy('id', 'desc') // Sắp xếp lại theo ID đơn hàng từ cao đến thấp (mới nhất ở đầu)
+            ->leftJoin('admins', 'orders.admin_id', '=', 'admins.id')
+            ->orderByRaw('
+                            CASE
+                                WHEN orders.status IN (1) THEN 1
+                                WHEN orders.status IN (2, 3, 4) THEN 2
+                                WHEN orders.status IN (5, 6) THEN 3
+                                ELSE 4
+                            END
+                        ')
+//            ->orderBy('orders.purchase_date', 'desc')
+//            ->orderBy('orders.id', 'desc')
+            ->select('orders.*', 'admins.name as admin_name', 'admins.email as admin_email') // Select the columns you need from both tables
             ->get();
 
 
+
+//        $randomIds = $request->session()->get('randomIds', []);
+
         foreach ($orders as $order) {
+            // Kiểm tra xem random ID đã tồn tại cho đơn hàng này
+//            if (!isset($randomIds[$order->id])) {
+//                $randomIds[$order->id] = Str::random(12); // Tạo một random ID riêng cho đơn hàng
+//            }
+//            if (isset($randomIds[$order->id])) {
+//                $order->random_id = $randomIds[$order->id];
+//            }
             $totalPrice = $order->orderDetails->sum('until_price'); // Tính tổng tiền từ các chi tiết đơn hàng
             $order->totalPrice = $totalPrice; // Gán tổng tiền cho đơn hàng
+//            $order->random_id = $randomIds[$order->id];
         }
-
+//        $request->session()->put('randomIds', $randomIds);
         return view('order.order', compact( 'orders'));
     }
 
@@ -37,6 +61,7 @@ class OrderController extends Controller
             'orders.status',
             'orders.purchase_date',
             'products.name AS NameProduct',
+            'products.img',
             'configurations.name as NameConfig',
             'configurations.price',
             'customers.name as customer_name',
@@ -137,6 +162,11 @@ class OrderController extends Controller
         if ($order->status == 1) {
             // Nếu trạng thái là 1 (Chờ xác nhận), thì chuyển sang trạng thái 2 (Đã duyệt đơn hàng)
             $order->status = 2;
+            // Lấy thông tin admin (người dùng đã đăng nhập)
+            $admin = Auth::guard('admin')->user(); // Sử dụng Auth::user() trong Laravel
+
+            // Gán admin_id cho đơn hàng
+            $order->admin_id = $admin->id;
             $order->save();
 
             return redirect()->back()->with('success', 'Đơn hàng đã được xác nhận');

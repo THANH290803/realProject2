@@ -22,7 +22,7 @@ class ProductController extends Controller
     public function index()
     {
         $products = DB::table('products')
-            ->leftJoin('configurations', 'products.id', '=', 'configurations.product_id')
+            ->leftjoin('configurations', 'products.id', '=', 'configurations.product_id')
             ->join('categories', 'products.cat_id', '=', 'categories.id')
             ->join('brands', 'products.brand_id', '=', 'brands.id')
             ->select(
@@ -30,13 +30,11 @@ class ProductController extends Controller
                 'products.name AS NameProduct',
                 'products.img',
                 'products.description',
-                'configurations.amount',
-                'configurations.id AS ConfigurationId',
-                'configurations.name AS ConfigurationName',
-                'configurations.price',
                 'categories.name AS CategoryName',
-                'brands.name AS BrandName'
+                'brands.name AS BrandName',
+                DB::raw('SUM(configurations.amount) AS totalAmount')
             )
+            ->groupBy('products.id', 'products.name', 'products.img', 'products.description', 'categories.name', 'brands.name')
             ->orderBy('products.id', 'desc') // Sắp xếp theo ID giảm dần
             ->get(); // Lấy bản ghi đầu tiên
 

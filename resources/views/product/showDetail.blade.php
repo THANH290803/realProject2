@@ -249,16 +249,16 @@
                             <h3>Số lượng: {{ $configuration->amount }}</h3>
                             <h3>Giá tiền: {{  number_format($configuration->price, 0, ',', '.') }}VND</h3>
                         </div>
-                        <a href="#" class="edit-button" style="color:#FFFFFF;margin-left: 15px;width: 48.5%;text-align: center;padding-bottom: 0px;height: 33px;" onclick="openEditDialog()">
-                            <i class="fas fa-edit"></i> Sửa
-                        </a>
-                        <form method="POST" action="{{ route('config.destroy', $configuration) }}" style="width: 48.5%;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="delete-button" style="color:#FFFFFF; width: 100%; text-align: center">
-                                <i class="fas fa-trash-alt"></i> Xóa
-                            </button>
-                        </form>
+{{--                        <a href="#" class="edit-button" style="color:#FFFFFF;margin-left: 15px;width: 48.5%;text-align: center;padding-bottom: 0px;height: 33px;" onclick="openEditDialog()">--}}
+{{--                            <i class="fas fa-edit"></i> Sửa--}}
+{{--                        </a>--}}
+{{--                        <form method="POST" action="{{ route('config.destroy', $configuration) }}" style="width: 48.5%;">--}}
+{{--                            @csrf--}}
+{{--                            @method('DELETE')--}}
+{{--                            <button type="submit" class="delete-button" style="color:#FFFFFF; width: 100%; text-align: center">--}}
+{{--                                <i class="fas fa-trash-alt"></i> Xóa--}}
+{{--                            </button>--}}
+{{--                        </form>--}}
                     </div>
                     <div class="row">
                         <div class="col-md-12">
@@ -369,36 +369,36 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="edit-dialog" style="display: none;">
-                                <div class="card">
-                                    <div class="card-header">Chỉnh sửa cấu hình</div>
-                                    <div class="card-body">
-                                        <form method="POST" action="{{ route('config.update', $configuration->id) }}">
-                                            @csrf
-                                            @method('PUT')
+{{--                            <div id="edit-dialog" style="display: none;">--}}
+{{--                                <div class="card">--}}
+{{--                                    <div class="card-header">Chỉnh sửa cấu hình</div>--}}
+{{--                                    <div class="card-body">--}}
+{{--                                        <form method="POST" action="{{ route('config.update', $configuration->id) }}">--}}
+{{--                                            @csrf--}}
+{{--                                            @method('PUT')--}}
 
-                                            <!-- Thêm các trường chỉnh sửa dữ liệu ở đây -->
-                                            <div class="form-group">
-                                                <label for="name">Tên cấu hình</label>
-                                                <input type="text" name="name" id="name" class="form-control" value="{{ $configuration->name }}">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="amount">Số lượng</label>
-                                                <input type="text" name="amount" id="amount" class="form-control" value="{{ $configuration->amount }}">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="price">Giá tiền</label>
-                                                <input type="text" name="price" id="price" class="form-control" value="{{ $configuration->price }}">
-                                            </div>
+{{--                                            <!-- Thêm các trường chỉnh sửa dữ liệu ở đây -->--}}
+{{--                                            <div class="form-group">--}}
+{{--                                                <label for="name">Tên cấu hình</label>--}}
+{{--                                                <input type="text" name="name" id="name" class="form-control" value="{{ $configuration->name }}">--}}
+{{--                                            </div>--}}
+{{--                                            <div class="form-group">--}}
+{{--                                                <label for="amount">Số lượng</label>--}}
+{{--                                                <input type="text" name="amount" id="amount" class="form-control" value="{{ $configuration->amount }}">--}}
+{{--                                            </div>--}}
+{{--                                            <div class="form-group">--}}
+{{--                                                <label for="price">Giá tiền</label>--}}
+{{--                                                <input type="text" name="price" id="price" class="form-control" value="{{ $configuration->price }}">--}}
+{{--                                            </div>--}}
 
-                                            <!-- Thêm các trường khác ở đây -->
+{{--                                            <!-- Thêm các trường khác ở đây -->--}}
 
-                                            <button type="submit" class="btn btn-primary">Lưu</button>
-                                            <button type="button" onclick="closeEditDialog()" class="btn btn-secondary">Hủy</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+{{--                                            <button type="submit" class="btn btn-primary">Lưu</button>--}}
+{{--                                            <button type="button" onclick="closeEditDialog()" class="btn btn-secondary">Hủy</button>--}}
+{{--                                        </form>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
                         </div>
                     </div>
                 </div>

@@ -3,16 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Configuration;
 use App\Models\Customer;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\Product;
+use App\Models\ProductDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Str;
 
 class CustomerController extends Controller
 {
@@ -155,7 +159,7 @@ class CustomerController extends Controller
         return redirect()->route('user.loginRegister');
     }
 
-    public function showUserProfile()
+    public function showUserProfile(Request $request)
     {
         $categories = Category::all();
         // Retrieve the authenticated customer
@@ -166,18 +170,37 @@ class CustomerController extends Controller
             return redirect()->route('user.loginRegister'); // Redirect to the login page or another appropriate action
         }
 
+//        $randomIds = $request->session()->get('randomIds', []);
+
         $orders = Order::with('customer', 'paymentMethod', 'orderDetails')
             ->where('customer_id', $customer->id)
-            ->orderBy('purchase_date', 'desc') // Sắp xếp theo thời gian mua giảm dần (mới nhất lên đầu)
-            ->orderBy('id', 'desc') // Sắp xếp lại theo ID đơn hàng từ cao đến thấp (mới nhất ở đầu)
+            ->orderByRaw('
+                            CASE
+                                WHEN orders.status IN (1) THEN 1
+                                WHEN orders.status IN (5, 6) THEN 3
+                                WHEN orders.status IN (2, 3, 4) THEN 2
+                                ELSE 4
+                            END
+                        ')
+//            ->orderBy('purchase_date', 'desc') // Sắp xếp theo thời gian mua giảm dần (mới nhất lên đầu)
+//            ->orderBy('id', 'desc') // Sắp xếp lại theo ID đơn hàng từ cao đến thấp (mới nhất ở đầu)
             ->get();
 
 
         foreach ($orders as $order) {
             $totalPrice = $order->orderDetails->sum('until_price'); // Tính tổng tiền từ các chi tiết đơn hàng
             $order->totalPrice = $totalPrice; // Gán tổng tiền cho đơn hàng
+//            if (isset($randomIds[$order->id])) {
+//                $order->random_id = $randomIds[$order->id];
+//            }
+            // Kiểm tra xem random ID đã tồn tại cho đơn hàng này
+//            if (!isset($randomIds[$order->id])) {
+//                $randomIds[$order->id] = Str::random(12); // Tạo một random ID riêng cho đơn hàng
+//                $randomIds[$order->id] = strtoupper($randomIds[$order->id]);
+//            }
+//            $order->random_id = $randomIds[$order->id];
         }
-
+//        $request->session()->put('randomIds', $randomIds);
         return view('user.myAccount', compact('customer', 'categories', 'orders'));
     }
 
@@ -222,10 +245,12 @@ class CustomerController extends Controller
             ->select(
                 'orders.id as order_id',
                 'orders.status',
+                'orders.random_id',
                 'orders.purchase_date',
                 'products.name AS NameProduct',
                 'configurations.name as nameconfig',
                 'configurations.price',
+                'products.img',
                 'customers.name as customer_name',
                 'customers.address',
                 'customers.phone_number',
@@ -271,7 +296,20 @@ class CustomerController extends Controller
 
         // Kiểm tra trạng thái của đơn hàng
         if ($order->status == 1 || $order->status == 2) {
-            // Nếu trạng thái là 3 (Đang giao hàng), thì chuyển sang trạng thái 4 (Đã giao hàng cho khách)
+            // Tìm và lấy danh sách các mục đơn hàng liên quan đến đơn hàng này
+            $orderDetails = OrderDetail::where('order_id', $order_id)->get();
+
+            foreach ($orderDetails as $orderDetail) {
+                // Lấy thông tin `Configuration` từ `ProductDetail`
+                $productDetail = ProductDetail::find($orderDetail->pro_de_id);
+                $config = Configuration::find($productDetail->config_id);
+
+                // Cộng số lượng từ `OrderDetail` vào `Configuration`
+                $config->amount += $orderDetail->amount;
+                $config->save();
+            }
+
+            // Đánh dấu đơn hàng là đã hủy
             $order->status = 6;
             $order->save();
 

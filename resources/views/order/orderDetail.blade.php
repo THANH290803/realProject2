@@ -76,6 +76,7 @@
                             <th width="10"><input type="checkbox" id="all"></th>
                             {{--                            <th>ID đơn hàng</th>--}}
                             <th>Sản phẩm</th>
+                            <th>Hình ảnh</th>
                             <th>Số lượng</th>
                             <th>Giá</th>
                             <th>Phương thức thanh toán</th>
@@ -88,6 +89,7 @@
                                 <td width="10"><input type="checkbox" name="check1" value="1"></td>
 {{--                                                            <td>MT9835</td>--}}
                                 <td>{{ $detail->NameProduct }} {{ $detail->NameConfig }}</td>
+                                <td><img src="{{ asset('img-sanpham/' . $detail->img) }}" alt="" width="100%;" height="100px"></td>
                                 <td>{{ $detail->amount }}</td>
                                 <td>{{ number_format($detail->price, 0, ',', '.') }} VND</td>
                                 <td>{{ $detail->payment_method }}</td>
@@ -95,7 +97,7 @@
                             </tr>
                         @endforeach
                             <tr>
-                                <td colspan="5">
+                                <td colspan="6">
                                     @php
                                         $totalPrice = 0;
                                         foreach ($details as $orderDetail) {

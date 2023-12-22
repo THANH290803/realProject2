@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Configuration;
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\ProductDetail;
 use App\Http\Requests\StoreProductDetailRequest;
 use App\Http\Requests\UpdateProductDetailRequest;
@@ -26,13 +28,19 @@ class ProductDetailController extends Controller
         $currentMonth = Carbon::now()->month;
         $currentYear = Carbon::now()->year;
 
+        $totalRevenue = OrderDetail::join('orders', 'order_details.order_id', '=', 'orders.id')
+            ->whereMonth('orders.purchase_date', $currentMonth)
+            ->whereYear('orders.purchase_date', $currentYear)
+            ->where('orders.status', '!=', 6)
+            ->sum('order_details.until_price');
+
         $orderCounts = Order::whereMonth('purchase_date', $currentMonth)
             ->whereYear('purchase_date', $currentYear)
             ->count();
-        $cancel = Order::where('status', 6)->count();
+        $outOfStockProductsCount = Configuration::where('amount', 0)->count();
         $latestOrders = Order::orderBy('purchase_date', 'desc')->take(5)->get();
 
-        return view('admin.index', compact('total', 'count', 'orderCounts', 'cancel', 'latestOrders'));
+        return view('admin.index', compact('total', 'count', 'orderCounts', 'outOfStockProductsCount', 'latestOrders', 'totalRevenue'));
     }
 
 
@@ -55,7 +63,7 @@ class ProductDetailController extends Controller
      */
     public function store(StoreProductDetailRequest $request)
     {
-        // 
+        //
     }
 
     /**

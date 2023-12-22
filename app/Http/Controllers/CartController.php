@@ -91,24 +91,24 @@ class CartController extends Controller
 
     public function updateCart(Request $request)
     {
-        $cart = $request->session()->get('cart');
+            $cart = $request->session()->get('cart');
 
-        // Loop through the cart items and update the quantities
-        foreach ($cart as $key => $cartItem) {
-            $newQuantity = $request->input("quantity.$key");
-            $cartItem['quantity'] = max(1, $newQuantity); // Ensure quantity is at least 1
+            // Loop through the cart items and update the quantities
+            foreach ($cart as $key => $cartItem) {
+                $newQuantity = $request->input("quantity.$key");
+                $cartItem['quantity'] = max(1, $newQuantity); // Ensure quantity is at least 1
 
-            // Update the total price for the cart item
-            $cartItem['total_price'] = $cartItem['price'] * $cartItem['quantity'];
+                // Update the total price for the cart item
+                $cartItem['total_price'] = $cartItem['price'] * $cartItem['quantity'];
 
-            $cart[$key] = $cartItem;
-        }
+                $cart[$key] = $cartItem;
+            }
 
-        // Update the session with the modified cart data
-        $request->session()->put('cart', $cart);
+            // Update the session with the modified cart data
+            $request->session()->put('cart', $cart);
 
-        // Redirect back to the cart page with a success message
-        return redirect()->route('user.cart')->with('success', 'Cart updated successfully');
+            // Redirect back to the cart page with a success message
+            return redirect()->route('user.cart')->with('success', 'Cart updated successfully');
     }
 
 
@@ -131,7 +131,7 @@ class CartController extends Controller
         }
 
         // Điều hướng trở lại trang giỏ hàng sau khi xóa sản phẩm
-        return redirect()->route('user.cart');
+        return redirect()->route('user.cart')->with('success', 'Cart remove successfully');
     }
 
     public function clearCart(Request $request)
@@ -172,13 +172,15 @@ class CartController extends Controller
             }
         }
 
+        $randomID = $request->input('random_id');
         // Create a new order
         $order = new Order([
             'status' => 1, // Set the initial status (you can change this)
             'purchase_date' => now(),
             'payment_id' => $request->input('payment_id'), // Assuming you have a select input for payment method
-            'admin_id' => 1, // Set the admin ID (you can change this)
+            'admin_id' => null, // Set the admin ID (you can change this)
             'customer_id' => $customer->id,
+            'random_id' => $randomID, // Add the 'random_id' to the order
         ]);
 
         $order->save();

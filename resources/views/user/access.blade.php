@@ -339,7 +339,7 @@
                                             <div class="single-product-wrap">
                                                 <div class="product-image">
                                                     <a href="{{ route('user.productDetail', ['productId' => $product->id, 'configurationId' => $product->ConfigurationId]) }}">
-                                                        <img src="{{ asset('img-sanpham/' . $product->img) }}" alt="Li's Product Image">
+                                                        <img src="{{ asset('img-sanpham/' . $product->img) }}" alt="Li's Product Image" height="270px">
                                                     </a>
                                                 </div>
                                                 <div class="product_desc">

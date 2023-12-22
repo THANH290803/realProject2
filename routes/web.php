@@ -44,6 +44,7 @@ Route::middleware('adminMiddleware')->prefix('/config')->group(function() {
     Route::post('/addConfig', [\App\Http\Controllers\ConfigurationController::class, 'store'])->name('config.store');
     Route::put('/configurations/{id}', [\App\Http\Controllers\ConfigurationController::class, 'update'])->name('config.update');
     Route::delete('{configuration}', [\App\Http\Controllers\ConfigurationController::class, 'destroy'])->name('config.destroy');
+    Route::get('/product/{productId}', [\App\Http\Controllers\ConfigurationController::class, 'show'])->name('config.config');
 });
 
 

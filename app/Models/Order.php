@@ -9,7 +9,7 @@ class Order extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $fillable = ['status', 'purchase_date', 'payment_id', 'admin_id', 'customer_id'];
+    protected $fillable = ['status', 'purchase_date', 'random_id', 'payment_id', 'admin_id', 'customer_id'];
     public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class);
