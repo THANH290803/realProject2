@@ -266,7 +266,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form class="row" method="post" action="{{ route('config.update', ['id' => $config->ConfigurationId ]) }}">
+                    <form class="row" method="post" action="{{ route('config.update', ['id' => $product->id ]) }}">
                         @csrf
                         @method('PUT')
                         <div class="form-group col-md-12">

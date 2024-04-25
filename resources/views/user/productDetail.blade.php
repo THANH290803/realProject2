@@ -556,7 +556,7 @@
                                 <!-- single-product-wrap start -->
                                 <div class="single-product-wrap">
                                     <div class="product-image">
-                                        <a href="{{ route('user.productDetail', ['productId' => $randomProduct->id, 'configurationId' => $randomProduct->randomConfiguration->id]) }}">
+                                        <a href="{{ route('user.productDetail', ['productId' => $randomProduct->id, 'configurationId' => $randomProduct->randomConfiguration ? $randomProduct->randomConfiguration->id : 0]) }}">
                                             <img src="{{ asset('img-sanpham/' . $randomProduct->img) }}" alt="Li's Product Image">
                                         </a>
                                     </div>
@@ -576,9 +576,9 @@
                                                     </ul>
                                                 </div>
                                             </div>
-                                            <h4><a class="product_name" href="{{ route('user.productDetail', ['productId' => $randomProduct->id, 'configurationId' => $randomProduct->randomConfiguration->id]) }}">{{ $randomProduct->name }} {{ $randomProduct->randomConfiguration->name }}</a></h4>
+                                            <h4><a class="product_name" href="{{ route('user.productDetail', ['productId' => $randomProduct->id, 'configurationId' => $randomProduct->randomConfiguration ? $randomProduct->randomConfiguration->id : 0]) }}">{{ $randomProduct->name }} {{ optional($randomProduct->randomConfiguration)->name }}</a></h4>
                                             <div class="price-box">
-                                                <span class="new-price">{{ number_format($randomProduct->randomConfiguration->price, 0, ',', '.') }}</span>
+                                                <span class="new-price">{{ isset($randomProduct->randomConfiguration) ? number_format($randomProduct->randomConfiguration->price, 0, ',', '.') : '' }}</span>
                                             </div>
                                         </div>
                                         <div class="add-actions">

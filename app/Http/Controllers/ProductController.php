@@ -30,11 +30,12 @@ class ProductController extends Controller
                 'products.name AS NameProduct',
                 'products.img',
                 'products.description',
+                'configurations.id AS ConfigurationId',
                 'categories.name AS CategoryName',
                 'brands.name AS BrandName',
                 DB::raw('SUM(configurations.amount) AS totalAmount')
             )
-            ->groupBy('products.id', 'products.name', 'products.img', 'products.description', 'categories.name', 'brands.name')
+            ->groupBy('products.id', 'products.name', 'products.img', 'products.description', 'configurations.id', 'categories.name', 'brands.name')
             ->orderBy('products.id', 'desc') // Sắp xếp theo ID giảm dần
             ->get(); // Lấy bản ghi đầu tiên
 

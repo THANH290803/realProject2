@@ -181,7 +181,7 @@
                                     <i class="fas fa-info-circle"></i>
                                 </a>
 {{--                                @else--}}
-{{--                                    --}}{{-- Handle the case where ConfigurationId is not set --}}
+{{--                                     Handle the case where ConfigurationId is not set--}}
 {{--                                @endif--}}
                                 <form method="post" action="{{ route('product.destroy', $product->id) }}" style="display: inline-block;">
                                     @method('DELETE')
