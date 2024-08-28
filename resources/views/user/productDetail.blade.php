@@ -1019,7 +1019,7 @@
                 const productId = configurationData.product_id; // Đảm bảo rằng bạn có ID của sản phẩm
 
                 // Tạo URL dựa trên thông tin cấu hình và chuyển hướng đến trang sản phẩm
-                const productDetailUrl = `/realProject2/public/user/productDetail/${productId}/${configurationId}`;
+                const productDetailUrl = `/user/productDetail/${productId}/${configurationId}`; // /realProject2/public
                 window.location.href = productDetailUrl;
             });
         });
